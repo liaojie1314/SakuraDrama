@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),//import.meta.env.BASE_URL   '/test/'
   routes: [
     {
       path: "/",
-      redirect: "/home",
+      name: "home",
+      component: () => import("../views/HomeView.vue"),
     },
     {
       path: "/login",
@@ -13,14 +14,14 @@ const router = createRouter({
       component: () => import("../views/LoginView.vue"),
     },
     {
-      path: "/home",
-      name: "home",
-      component: () => import("../views/HomeView.vue"),
-    },
-    {
       path: "/search",
       name: "search",
       component: () => import("../views/SearchView.vue"),
+    },
+    {
+      path: "/detail",
+      name: "detail",
+      component: () => import("../views/DetailView.vue"),
     },
     {
       path: "/video",

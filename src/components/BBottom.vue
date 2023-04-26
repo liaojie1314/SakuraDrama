@@ -2,14 +2,14 @@
     <div class="international-footer">
         <div class="link-box b-footer-wrap">
             <div class="link-item link-a">
-                <span class="bt">bilibili</span>
+                <span class="bt">樱花番剧</span>
                 <ul><a target="_blank" >关于我们</a>
                     <a target="_blank" >联系我们</a>
                     <a target="_blank" >用户协议</a>
                     <a target="_blank" >加入我们</a>
                     <a target="_blank" >友情链接</a>
                     <a target="_blank" >隐私政策</a>
-                    <a target="_blank" >bilibili认证</a>
+                    <a target="_blank" >樱花番剧认证</a>
                     <a target="_blank" >Investor Relations</a>
                 </ul>
 

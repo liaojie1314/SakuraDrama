@@ -5,7 +5,13 @@
         <span class="title-text">评论</span>
         <span class="total-reply">{{ totalCommentList.total }}</span>
       </div>
-      <div :class="{ 'nav-sort': true, 'hot': commentStatus[0], 'new': commentStatus[1] }">
+      <div
+        :class="{
+          'nav-sort': true,
+          hot: commentStatus[0],
+          new: commentStatus[1],
+        }"
+      >
         <div class="hot-sort" @click="changeStatus(0)">最热</div>
         <div class="part-symbol"></div>
         <div class="time-sort" @click="changeStatus(1)">最新</div>
@@ -14,14 +20,17 @@
     <div class="reply-box">
       <div class="box-normal">
         <div class="reply-box-avatar">
-          <div class="bili-avatar" style="width: 48px;height:48px;">
-            <img class="bili-avatar-img" alt="" src="../assets/img/head.webp">
+          <div class="bili-avatar" style="width: 48px; height: 48px">
+            <img class="bili-avatar-img" alt="" src="../assets/img/head.webp" />
             <span class="bili-avatar-icon"></span>
           </div>
         </div>
         <div class="reply-box-warp">
-          <textarea class="reply-box-textarea" placeholder="只是一直在等你而已，才不是想被评论呢～"
-            v-model="postCommentForm.content"></textarea>
+          <textarea
+            class="reply-box-textarea"
+            placeholder="只是一直在等你而已，才不是想被评论呢～"
+            v-model="postCommentForm.content"
+          ></textarea>
         </div>
         <div class="reply-box-send" @click="postComment">
           <div class="send-text">发布</div>
@@ -29,108 +38,112 @@
       </div>
     </div>
 
-    <div style="height: 500px;margin-top: 10px" class="commentList" v-infinite-scroll="getMore"
-      infinite-scroll-immediate="false">
+    <div
+      style="height: 500px; margin-top: 10px"
+      class="commentList"
+      v-infinite-scroll="getMore"
+      infinite-scroll-immediate="false"
+    >
       <div class="container">
         <div v-for="item in commentList.data" class="comment">
           <CommentItem :comments="item"></CommentItem>
         </div>
       </div>
-      <div class="noMore" v-if="queryData.pagenum > allPages">
-        没有更多评论
-      </div>
+      <div class="noMore" v-if="queryData.pagenum > allPages">没有更多评论</div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, getCurrentInstance, onMounted, reactive } from 'vue'
-import CommentItem from './CommentItem.vue';
-import api from '@/api/video.js'
-import { useRoute } from 'vue-router';
-import util from '../utils/utils'
-import { ElMessage } from 'element-plus'
-import { useAuthStore } from '../stores/state';
+import { ref, getCurrentInstance, onMounted, reactive } from "vue";
+import CommentItem from "./CommentItem.vue";
+import api from "@/api/video.js";
+import { useRoute } from "vue-router";
+import util from "../utils/utils";
+import { ElMessage } from "element-plus";
+import { useAuthStore } from "../stores/state";
 
-const route = useRoute()
-const authStore = useAuthStore()
-let commentStatus = reactive([true, false])
-let currentInstance = ''
+const route = useRoute();
+const authStore = useAuthStore();
+let commentStatus = reactive([true, false]);
+let currentInstance = "";
 let postCommentForm = reactive({
   user_id: authStore.userId,
-  content: '',
-  video_id: parseInt(route.query.video_id)
-})
-let totalCommentList = reactive({ total: 0, hot: [], now: [] }) //评论列表
+  content: "",
+  video_id: parseInt(route.query.video_id),
+  root_comment_id: 0,
+});
+let totalCommentList = reactive({ total: 0, hot: [], now: [] }); //评论列表
 let commentList = reactive({
-  data: []
-})
+  data: [],
+});
 let queryData = reactive({
   video_id: parseInt(route.query.video_id),
   pagenum: 1,
   pagesize: 10,
-})//查询评论列表传参
-let allPages = ref(1)//评论总页数
+  user_id: authStore.userId,
+}); //查询评论列表传参
+let allPages = ref(1); //评论总页数
 
 /*获取评论列表*/
 function getComment() {
-  api.getComment1(queryData).then(res => {
-    totalCommentList.total = res.total
-    totalCommentList.hot = totalCommentList.hot.concat(res.rowsByHot)
-    totalCommentList.now = totalCommentList.now.concat(res.rowsByTime)
-    allPages.value = util.getPageCount(res.total, queryData.pagesize)
-    commentList.data = totalCommentList.hot
-  })
+  api.getComment1(queryData).then((res) => {
+    totalCommentList.total = res.data.total;
+    totalCommentList.hot = totalCommentList.hot.concat(res.data.commentsByHot);
+    totalCommentList.now = totalCommentList.now.concat(res.data.commentsByTime);
+    allPages.value = util.getPageCount(res.total, queryData.pagesize);
+    commentList.data = totalCommentList.hot;
+  });
 }
 /*获取更多评论*/
 function getMore() {
   queryData.pagenum = queryData.pagenum + 1;
-  console.log(queryData);
   if (queryData.pagenum > allPages.value) {
-
   } else {
-    getComment()
+    getComment();
   }
 }
 
 const changeStatus = (status) => {
   if (status == 0) {
-    commentStatus[0] = true
-    commentStatus[1] = false
-    commentList.data = totalCommentList.hot
+    commentStatus[0] = true;
+    commentStatus[1] = false;
+    commentList.data = totalCommentList.hot;
   } else {
-    commentStatus[1] = true
-    commentStatus[0] = false
-    commentList.data = totalCommentList.now
+    commentStatus[1] = true;
+    commentStatus[0] = false;
+    commentList.data = totalCommentList.now;
   }
-}
+};
+//发表评论
 const postComment = () => {
-  api.postComment(postCommentForm).then((res) => {
-    if (res.code === 0) {
-      ElMessage.success(res.message)
-      postCommentForm.content = ''
-      totalCommentList.hot = []
-      totalCommentList.now = []
-      getComment()
-    }
-  }).catch(error => {
-    console.log(error);
-  })
-}
+  api
+    .postComment(postCommentForm)
+    .then((res) => {
+      if (res.code === 0) {
+        ElMessage.success(res.message);
+        postCommentForm.content = "";
+        totalCommentList.hot = [];
+        totalCommentList.now = [];
+        getComment();
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
 onMounted(() => {
-  getComment()
-  currentInstance = getCurrentInstance()
-})
-
+  getComment();
+  currentInstance = getCurrentInstance();
+});
 </script>
 
-<style scoped lang='less'>
+<style scoped lang="less">
 .b-comment {
   width: 1244px;
 
   .nav-bar {
-
     margin-left: 10px;
     display: flex;
     align-items: center;
@@ -142,38 +155,39 @@ onMounted(() => {
       font-size: 24px;
 
       .title-text {
-        color: #18191C;
-        font-family: PingFang SC, HarmonyOS_Medium, Helvetica Neue, Microsoft YaHei, sans-serif;
+        color: #18191c;
+        font-family: PingFang SC, HarmonyOS_Medium, Helvetica Neue,
+          Microsoft YaHei, sans-serif;
         font-weight: 500;
       }
 
       .total-reply {
         margin: 0 36px 0 6px;
         font-weight: normal;
-        color: #9499A0;
+        color: #9499a0;
         font-size: 14px;
       }
     }
 
     .nav-sort.hot .hot-sort {
-      color: #18191C;
+      color: #18191c;
     }
 
     .nav-sort.new .time-sort {
-      color: #18191C;
+      color: #18191c;
     }
 
     .nav-sort {
       font-size: 16px;
       display: flex;
       align-items: center;
-      color: #9499A0;
+      color: #9499a0;
 
       .hot-sort {
         cursor: pointer;
 
         &:hover {
-          color: #00AEEC;
+          color: #00aeec;
         }
       }
 
@@ -181,7 +195,7 @@ onMounted(() => {
         cursor: pointer;
 
         &:hover {
-          color: #00AEEC;
+          color: #00aeec;
         }
       }
 
@@ -255,12 +269,12 @@ onMounted(() => {
           width: 100%;
           height: 100%;
           padding: 5px 10px;
-          border: 1px solid #F1F2F3;
+          border: 1px solid #f1f2f3;
           border-radius: 6px;
-          background-color: #F1F2F3;
+          background-color: #f1f2f3;
           font-family: inherit;
           line-height: 38px;
-          color: #18191C;
+          color: #18191c;
           resize: none;
           outline: none;
           overflow: auto;
@@ -279,7 +293,7 @@ onMounted(() => {
         margin-left: 10px;
         border-radius: 4px;
         cursor: pointer;
-        background-color: #40C5F1;
+        background-color: #40c5f1;
 
         .send-text {
           position: absolute;
@@ -299,7 +313,7 @@ onMounted(() => {
 .noMore {
   line-height: 64px;
   font-size: 12px;
-  color: #99A2AA;
+  color: #99a2aa;
   text-align: center;
   margin: 0 20px 0 66px;
   border-top: 1px solid #e5e9ef;
@@ -342,7 +356,7 @@ onMounted(() => {
 /*定义滑块 内阴影+圆角*/
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: rgba(0, 0, 0, 0.1);
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
     <div>
-        <BHeader></BHeader>
-        <BBody></BBody>
+        <MiniHeader></MiniHeader>
+        <HomeBody></HomeBody>
         <BBottom></BBottom>
         <BElevator></BElevator>
         <BMascot></BMascot>
@@ -9,14 +9,14 @@
 </template>
 
 <script setup>
-import BHeader from '../components/BHeader.vue'
 import BBottom from '../components/BBottom.vue'
 import BElevator from '../components/BElevator.vue'
-import BMascot from '../components/BMascot.vue'
-import BBody from '../components/Body/BBody.vue';
+import BMascot from '../components/BMascot.vue';
+import HomeBody from '../components/Body/HomeBody.vue'
 import api from '@/api/login.js'
 import { useAuthStore } from '../stores/state';
 import { onMounted } from 'vue';
+import MiniHeader from '../components/MiniHeader.vue';
 
 const authStore = useAuthStore()
 const loginTokenForm = { username: authStore.userName, token: authStore.token }

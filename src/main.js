@@ -7,6 +7,8 @@ import "vue3-video-play/dist/style.css"; // 引入css
 import App from "./App.vue";
 import router from "./router";
 import "./assets/main.css";
+import "./assets/iconfont/iconfont.css"
+import "./assets/iconfont/iconfont.js"
 
 const app = createApp(App);
 

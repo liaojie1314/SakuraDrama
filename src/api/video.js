@@ -33,10 +33,18 @@ const postComment = (data) => {
   });
 };
 
+const thumbUp = (data)=>{
+  return video.post({
+    url: "/commentLike",
+    data,
+  });
+}
+
 export default {
   getComment1,
   getComment2,
   postComment,
   getVideoInfo,
   getVideoUrl,
+  thumbUp
 };
