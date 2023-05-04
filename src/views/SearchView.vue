@@ -82,6 +82,7 @@ const handleClick = (tab, event) => {
 
 const handleChange = (name) => {
   searchForm.pagenum = 1;
+  search();
 };
 const changeNum = (value) => {
   searchForm.pagenum = value;
