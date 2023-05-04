@@ -9,20 +9,20 @@
               主站</a
             >
           </li>
-          <li class="nav-link-item" @click="gotoDetail(0)">
-            <a class="link">动漫</a>
+          <li class="nav-link-item">
+            <a class="link" href="/detail?type=0">动漫</a>
           </li>
-          <li class="nav-link-item" @click="gotoDetail(1)">
-            <a class="link">电影</a>
+          <li class="nav-link-item">
+            <a class="link" href="/detail?type=1">电影</a>
           </li>
-          <li class="nav-link-item" @click="gotoDetail(3)">
-            <a class="link">电视剧</a>
+          <li class="nav-link-item">
+            <a class="link" href="/detail?type=2">电视剧</a>
           </li>
-          <li class="nav-link-item" @click="gotoDetail(2)">
-            <a class="link">综艺</a>
+          <li class="nav-link-item">
+            <a class="link" href="/detail?type=3">综艺</a>
           </li>
-          <li class="nav-link-item" @click="gotoDetail(4)">
-            <a class="link">壁纸</a>
+          <li class="nav-link-item">
+            <a class="link" href="/detail?type=4">壁纸</a>
           </li>
         </ul>
       </div>
@@ -337,15 +337,6 @@ const getHistory = () => {
     if (res.code == 0) {
       restaurants.value = res.data;
     }
-  });
-};
-
-const gotoDetail = (type) => {
-  router.push({
-    name: "detail",
-    query: {
-      type,
-    },
   });
 };
 

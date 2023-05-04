@@ -17,15 +17,35 @@
           <h1>注册</h1>
         </div>
         <!-- 输入框盒子 -->
-        <el-form ref="registerFormRef" :model="registerForm" :rules="rules" label-with="5px">
+        <el-form
+          ref="registerFormRef"
+          :model="registerForm"
+          :rules="rules"
+          label-with="5px"
+        >
           <el-form-item prop="username" label=" ">
-            <el-input type="text" placeholder="用户名" :suffix-icon="User" v-model="registerForm.username" />
+            <el-input
+              type="text"
+              placeholder="用户名"
+              :suffix-icon="User"
+              v-model="registerForm.username"
+            />
           </el-form-item>
           <el-form-item prop="password" label=" ">
-            <el-input type="password" placeholder="密码" :suffix-icon="Lock" v-model="registerForm.password" />
+            <el-input
+              type="password"
+              placeholder="密码"
+              :suffix-icon="Lock"
+              v-model="registerForm.password"
+            />
           </el-form-item>
           <el-form-item prop="confirmPassword" label=" ">
-            <el-input type="password" placeholder="确认密码" :suffix-icon="Lock" v-model="registerForm.confirmPassword" />
+            <el-input
+              type="password"
+              placeholder="确认密码"
+              :suffix-icon="Lock"
+              v-model="registerForm.confirmPassword"
+            />
           </el-form-item>
         </el-form>
         <!-- 按钮盒子 -->
@@ -42,12 +62,27 @@
           <h1>登录</h1>
         </div>
         <!-- 输入框盒子 -->
-        <el-form ref="loginFormRef" :model="loginForm" :rules="rules" label-with="5px">
+        <el-form
+          ref="loginFormRef"
+          :model="loginForm"
+          :rules="rules"
+          label-with="5px"
+        >
           <el-form-item prop="username" label=" ">
-            <el-input type="text" placeholder="用户名" :suffix-icon="User" v-model="loginForm.username" />
+            <el-input
+              type="text"
+              placeholder="用户名"
+              :suffix-icon="User"
+              v-model="loginForm.username"
+            />
           </el-form-item>
           <el-form-item prop="password" label=" ">
-            <el-input type="password" placeholder="密码" :suffix-icon="Lock" v-model="loginForm.password" />
+            <el-input
+              type="password"
+              placeholder="密码"
+              :suffix-icon="Lock"
+              v-model="loginForm.password"
+            />
           </el-form-item>
         </el-form>
         <!-- 按钮盒子 -->
@@ -62,81 +97,90 @@
 </template>
 
 <script setup>
-import { Lock, User } from '@element-plus/icons-vue'
-import loginSwitch from '@/utils/loginSwitch'
-import { reactive, ref } from 'vue'
-import api from '@/api/login.js'
-import { ElMessage } from 'element-plus'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/state'
+import { Lock, User } from "@element-plus/icons-vue";
+import loginSwitch from "@/utils/loginSwitch";
+import { reactive, ref } from "vue";
+import api from "@/api/login.js";
+import { ElMessage } from "element-plus";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "../stores/state";
 
-const authStore = useAuthStore()
+const authStore = useAuthStore();
 const loginForm = reactive({
-  username: '',
-  password: ''
-})
+  username: "",
+  password: "",
+});
 const registerForm = reactive({
-  username: '',
-  password: '',
-  confirmPassword: ''
-})
+  username: "",
+  password: "",
+  confirmPassword: "",
+});
 
-const loginFormRef = ref('')
-const registerFormRef = ref('')
+const loginFormRef = ref("");
+const registerFormRef = ref("");
 const rules = reactive({
   username: [
-    { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 3, message: '长度应该大于3', trigger: 'blur' },
+    { required: true, message: "请输入用户名", trigger: "blur" },
+    { min: 3, message: "长度应该大于3", trigger: "blur" },
   ],
   password: [
-    { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 6, message: '长度应该大于6', trigger: 'blur' },
+    { required: true, message: "请输入密码", trigger: "blur" },
+    { min: 6, message: "长度应该大于6", trigger: "blur" },
   ],
   confirmPassword: [
-    { required: true, message: '请确认密码', trigger: 'blur' },
-    { min: 6, message: '长度应该大于6', trigger: 'blur' },
+    { required: true, message: "请确认密码", trigger: "blur" },
+    { min: 6, message: "长度应该大于6", trigger: "blur" },
   ],
-})
+});
 
-const router = useRouter()
+const router = useRouter();
 
 const login = () => {
   loginFormRef.value.validate((valid) => {
     if (valid) {
-      api.loginApi(loginForm).then(res => {
-        if (res.code === 0) {
-          ElMessage.success(res.message)
-          authStore.login(res.token, loginForm.username, res.user_id)
-          router.go(-1)
-        }
-      }).catch(error => {
-        console.log(error);
-      })
+      api
+        .loginApi(loginForm)
+        .then((res) => {
+          if (res.code === 0) {
+            ElMessage.success(res.message);
+            authStore.login(res.token, loginForm.username, res.user_id);
+            router.go(-1);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } else {
-      return
+      return;
     }
-  })
-}
+  });
+};
 
 const register = () => {
   registerFormRef.value.validate((valid) => {
     if (valid) {
       if (registerForm.password == registerForm.confirmPassword) {
-        api.registerApi(registerForm).then(res => {
-          if (res.code === 0) {
-            ElMessage.success(res.message)
-          }
-        }).catch(error => {
-          console.log(error);
-        })
+        api
+          .registerApi(registerForm)
+          .then((res) => {
+            if (res.code === 0) {
+              ElMessage.success(res.message);
+              registerForm.username = "";
+              registerForm.password = "";
+              registerForm.confirmPassword = "";
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       } else {
-        ElMessage.error("俩次输入密码不同")
+        ElMessage.error("俩次输入密码不同");
       }
     } else {
-      return
+      return;
     }
-  })
-}
+  });
+};
 </script>
 
 <style scoped lang="less">
@@ -234,7 +278,6 @@ input {
     transition: 0.5s;
   }
 }
-
 
 /* 登录和注册盒子 */
 .login-form,

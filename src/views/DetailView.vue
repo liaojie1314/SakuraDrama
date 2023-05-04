@@ -4,7 +4,9 @@
     <h2 style="text-align: center; margin-top: 10px; margin-bottom: 5px">
       {{ name }}
     </h2>
-    <BBody :show-data="showData" :type="type" @change-num="changeNum"></BBody>
+    <div class="body">
+      <BBody :show-data="showData" :type="type" @change-num="changeNum"></BBody>
+    </div>
     <BBottom></BBottom>
   </div>
 </template>
@@ -15,10 +17,10 @@ import BBottom from "../components/BBottom.vue";
 import BBody from "../components/Body/BBody.vue";
 import { useRoute } from "vue-router";
 import api from "@/api/detail.js";
-import { reactive, onMounted } from "vue";
+import { reactive, onMounted,ref } from "vue";
 const route = useRoute();
 let type = route.query.type;
-const name = getName();
+const name = ref(getName());
 const typeForm = {
   type: type,
   pagenum: 1,
@@ -58,4 +60,8 @@ onMounted(() => {
 });
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.body{
+  min-height: 256px;
+}
+</style>

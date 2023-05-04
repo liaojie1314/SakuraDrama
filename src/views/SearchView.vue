@@ -9,7 +9,7 @@
     >
       <div v-for="i in 4">
         <el-tab-pane :label="searchData[i - 1].name" :name="i">
-          <BBody :show-data="searchData[i - 1]"></BBody>
+          <BBody :show-data="searchData[i - 1]" @change-num="changeNum"></BBody>
         </el-tab-pane>
       </div>
     </el-tabs>
@@ -80,8 +80,13 @@ const handleClick = (tab, event) => {
   //console.log(tab, event)
 };
 
-const handleChange = (name) => {};
-
+const handleChange = (name) => {
+  searchForm.pagenum = 1;
+};
+const changeNum = (value) => {
+  searchForm.pagenum = value;
+  search();
+};
 onMounted(() => {
   search();
 });

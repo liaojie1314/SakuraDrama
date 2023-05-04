@@ -7,24 +7,25 @@
     </div>
     <div class="comment_right">
       <div class="right_name">
-        {{ comments.nickname }}
+        {{ props.comments.nickname }}
       </div>
       <p class="right_content">
-        {{ comments.content }}
+        {{ props.comments.content }}
       </p>
       <div class="right_other">
         <span class="other_time">
-          {{ comments.createTime }}
+          {{ props.comments.createTime }}
         </span>
         <span class="other_likeNumber">
-          <i
-            @click="commentLike(comments.id)"
-            class="iconfont icon-dianzan"
+          <img
+            style="width: 14px; height: 14px"
+            src="../assets/img/thumbup.png"
+            @click="commentLike(props.comments.id)"
             :class="{ isThumbUp: isThumbUp1 }"
-          ></i>
-          {{ comments.commitLikeCount }}
+          />
+          {{ props.comments.commitLikeCount }}
         </span>
-        <span @click="openBox(comments.id)" class="other_revertNumber"
+        <span @click="openBox(props.comments.id)" class="other_revertNumber"
           >回复</span
         >
       </div>
@@ -51,14 +52,17 @@
                     {{ item.createTime }}
                   </span>
                   <span class="other_likeNumber">
-                    <i
+                    <img
+                      style="width: 14px; height: 14px"
+                      src="../assets/img/thumbup.png"
                       @click="commentLike(item.id, index)"
-                      class="iconfont icon-dianzan"
                       :class="{ isThumbUp: item.is_thumbup }"
-                    ></i>
+                    />
                     {{ item.commitLikeCount }}
                   </span>
-                  <span class="other_revertNumber" @click="openBox(comments.id)"
+                  <span
+                    class="other_revertNumber"
+                    @click="openBox(props.comments.id)"
                     >回复</span
                   >
                 </div>
@@ -105,13 +109,13 @@ const props = defineProps({
 });
 const stores = useAuthStore();
 const route = useRoute();
-let comments = reactive(props.comments);
 const cover = "/src/assets/img/head.webp";
+const emit = defineEmits(["reGetComment"]);
 let showMore = ref(false); //显示跟多回复
 let showTotal = ref(3); //默认显示条数
 let replayList = reactive({ list: [] });
 let queryData = reactive({
-  videoCommentid: comments.id,
+  videoCommentid: props.comments.id,
   pagenum: 1,
   pagesize: 10,
   user_id: stores.userId,
@@ -127,7 +131,7 @@ let postCommentForm = reactive({
   root_comment_id: 0,
 });
 let total = ref(null);
-let isThumbUp1 = ref(comments.is_thumbup);
+let isThumbUp1 = ref(props.comments.is_thumbup);
 
 /*获取跟多评论的回复*/
 function viewMore() {
@@ -154,17 +158,15 @@ function thumbUp(commentLevel, index) {
         ElMessage.success(res.message);
         if (res.message == "取消点赞") {
           if (commentLevel == 1) {
-            isThumbUp1.value = 0;
-            comments.commitLikeCount--;
+            emit("reGetComment");
           } else if (commentLevel == 2) {
-            getCommentReply()
+            getCommentReply();
           }
         } else if (res.message == "点赞成功") {
           if (commentLevel == 1) {
-            isThumbUp1.value = 1;
-            comments.commitLikeCount++;
+            emit("reGetComment");
           } else if (commentLevel == 2) {
-            getCommentReply()
+            getCommentReply();
           }
         }
       }
@@ -179,7 +181,7 @@ function handleCurrent(value) {
 }
 function commentLike(id, index = -1) {
   likeData.comment_id = id;
-  if (id == comments.id) {
+  if (id == props.comments.id) {
     thumbUp(1, index);
   } else {
     thumbUp(2, index);
@@ -192,7 +194,7 @@ function postComment() {
       console.log(res);
       if (res.code === 0) {
         ElMessage.success(res.message);
-        getCommentReply()
+        getCommentReply();
       }
     })
     .catch((error) => {
@@ -212,13 +214,15 @@ function openBox(id) {
     })
     .catch(() => {});
 }
-watch(() => {});
-//   watch: {
-//     "comments.id"(newVal) {
-//       this.queryData.videoCommentid = newVal;
-//       this.getCommentReply();
-//     },
-//   },
+watch(
+  () => props.comments.id,
+  (newVal) => {
+    isThumbUp1.value = props.comments.is_thumbup;
+    console.log("object");
+    queryData.videoCommentid = newVal;
+    getCommentReply();
+  }
+);
 onMounted(() => {
   getCommentReply();
 });
@@ -280,7 +284,7 @@ onMounted(() => {
         cursor: pointer;
         margin-right: 20px;
         .isThumbUp {
-          color: red;
+          content: url(../assets/img/thumbup1.png);
         }
       }
 

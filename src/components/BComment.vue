@@ -46,7 +46,7 @@
     >
       <div class="container">
         <div v-for="item in commentList.data" class="comment">
-          <CommentItem :comments="item"></CommentItem>
+          <CommentItem :comments="item" @re-get-comment="reGetComment"></CommentItem>
         </div>
       </div>
       <div class="noMore" v-if="queryData.pagenum > allPages">没有更多评论</div>
@@ -123,14 +123,18 @@ const postComment = () => {
       if (res.code === 0) {
         ElMessage.success(res.message);
         postCommentForm.content = "";
-        totalCommentList.hot = [];
-        totalCommentList.now = [];
-        getComment();
+        reGetComment();
       }
     })
     .catch((error) => {
       console.log(error);
     });
+};
+
+const reGetComment = () => {
+  totalCommentList.hot = [];
+  totalCommentList.now = [];
+  getComment();
 };
 
 onMounted(() => {

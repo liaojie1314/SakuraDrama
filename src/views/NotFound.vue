@@ -23,10 +23,10 @@ import MiniHeader from '../components/MiniHeader.vue';
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
 
-const imgLists = ["/src/assets/img/404/404_1.png", "/src/assets/img/404/404_2.png", "/src/assets/img/404/404_3.png", "/src/assets/img/404/404_4.png", "/src/assets/img/404/404_5.png",
-    "/src/assets/img/404/404_6.png", "/src/assets/img/404/404_7.png", "/src/assets/img/404/404_8.png", "/src/assets/img/404/404_9.png", "/src/assets/img/404/404_10.png"]
+const imgLists = ["/assets/img/404/404_1.png", "/assets/img/404/404_2.png", "/assets/img/404/404_3.png", "/assets/img/404/404_4.png", "/assets/img/404/404_5.png",
+    "/assets/img/404/404_6.png", "/assets/img/404/404_7.png", "/assets/img/404/404_8.png", "/assets/img/404/404_9.png", "/assets/img/404/404_10.png"]
 
-let imgUrl = ref("/src/assets/img/404/404_1.png");
+let imgUrl = ref("/assets/img/404/404_1.png");
 const router = useRouter()
 function changeImg() {
     imgUrl.value = imgLists[Math.floor(Math.random() * imgLists.length)];
