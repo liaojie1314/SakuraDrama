@@ -80,10 +80,7 @@ const handleClick = (tab, event) => {
   //console.log(tab, event)
 };
 
-const handleChange = (name) => {
-  searchForm.pagenum = 1;
-  search();
-};
+const handleChange = (name) => {};
 const changeNum = (value) => {
   searchForm.pagenum = value;
   search();
