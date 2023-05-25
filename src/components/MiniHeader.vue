@@ -75,7 +75,7 @@
             v-if="!isLoggedIn"
             id="zcc"
             class="item"
-            style="margin-left: 22px"
+            style="margin-left: 15px"
             @click="gotoLogin"
           >
             <a class="name">注册</a>
@@ -89,6 +89,7 @@
           >
             <a class="name">注销</a>
           </div>
+          <button @click="upload" id="tg" style="position: absolute;right: -5px;cursor: pointer;">投稿</button>
         </div>
       </div>
       <div
@@ -280,6 +281,7 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../stores/state";
 import api from "@/api/home.js";
+import video from "@/api/video.js";
 const authStore = useAuthStore();
 
 const isLoggedIn = authStore.isLoggedIn;
@@ -339,6 +341,17 @@ const getHistory = () => {
     }
   });
 };
+
+const upload = ()=>{
+  
+  video.upload().then((res) => {
+    if (res.code === 0) {
+      
+    }
+  }).catch(error => {
+    console.log(error);
+  })
+}
 
 onMounted(() => {
   getHistory();

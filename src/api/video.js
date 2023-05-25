@@ -40,11 +40,28 @@ const thumbUp = (data)=>{
   });
 }
 
+const upload = (data)=>{
+  return video.post({
+    url: "/upload",
+    data,
+  });
+}
+
+
+const download = (data)=>{
+  return video.post({
+    url: "/download",
+    data,
+  });
+}
+
 export default {
   getComment1,
   getComment2,
   postComment,
   getVideoInfo,
   getVideoUrl,
-  thumbUp
+  thumbUp,
+  upload,
+  download
 };

@@ -109,6 +109,20 @@ const playUrl = (i) => {
   const index = videoUrl.episodes.indexOf(i)
   options.src = videoUrl.url[index]
 }
+
+const download = (episode) => {
+  const form = {
+    episode: episode,
+    video_id: route.query
+  }
+  api.getVideoInfo(form).then((res) => {
+    if (res.code === 0) {
+      
+    }
+  }).catch(error => {
+    console.log(error);
+  })
+}
 onMounted(() => {
   getVideoInfo()
   getVideoUrl()
