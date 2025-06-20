@@ -5,17 +5,17 @@
 ## Project Setup
 
 ```sh
-npm install
+pnpm i
 ```
 
 ### Compile and Hot-Reload for Development
 
 ```sh
-npm run dev
+pnpm dev
 ```
 
 ### Compile and Minify for Production
 
 ```sh
-npm run build
+pnpm build
 ```
